@@ -2,30 +2,14 @@ import axios from 'axios'
 
 import logger from '../../../logger'
 
-const getContextForFilePath = filePath => {
-    let context = 'bundlewatch'
-    if (filePath) {
-        const TRUNCATE_TO_LENGTH = 35
-        if (filePath.length > TRUNCATE_TO_LENGTH) {
-            context +=
-                ' *' +
-                filePath.substring(
-                    filePath.length - TRUNCATE_TO_LENGTH - 2,
-                    filePath.length,
-                )
-        } else {
-            context += ' ' + filePath
-        }
-    }
-    return context
-}
 
 class GitHubService {
-    constructor({ repoOwner, repoName, commitSha, githubAccessToken }) {
+    constructor({ repoOwner, repoName, commitSha, githubAccessToken, statusCategory }) {
         this.repoOwner = repoOwner
         this.repoName = repoName
         this.commitSha = commitSha
         this.githubAccessToken = githubAccessToken
+        this.statusCategory = statusCategory
         this.contexts = new Set()
     }
 
@@ -44,6 +28,27 @@ class GitHubService {
         }
 
         return false
+    }
+
+    getContextForFilePath(filePath) {
+        let context = `bundlewatch`
+
+        if (this.statusCategory) context = `${context}:${statusCategory}`
+
+        if (filePath) {
+            const TRUNCATE_TO_LENGTH = 35
+            if (filePath.length > TRUNCATE_TO_LENGTH) {
+                context +=
+                    ' *' +
+                    filePath.substring(
+                        filePath.length - TRUNCATE_TO_LENGTH - 2,
+                        filePath.length,
+                    )
+            } else {
+                context += ' ' + filePath
+            }
+        }
+        return context
     }
 
     update(message, url, status, filePath) {

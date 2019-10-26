@@ -7,7 +7,7 @@ const ciVars = getCIVars(process.env)
 
 const defaultConfig = {
     files: [],
-    bundlewatchServiceHost: 'https://service.bundlewatch.io', // Can be a custom service, or set to NUll
+    bundlewatchServiceHost: 'https://service.bundlewatch.io', // Can be a custom service, or set to null
     ci: {
         githubAccessToken: ciVars.githubAccessToken,
         repoOwner: ciVars.repoOwner,
@@ -16,6 +16,7 @@ const defaultConfig = {
         repoBranchBase: ciVars.repoBranchBase || 'master', // Branch PR is being merged into
         commitSha: ciVars.commitSha,
         trackBranches: ['master', 'develop'],
+        statusCategory: '', // To differentiate between multiple runs in CI
     },
     defaultCompression: 'gzip',
 }
